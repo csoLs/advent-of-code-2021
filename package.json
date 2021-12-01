@@ -1,0 +1,42 @@
+{
+  "name": "advent-of-code-2021",
+  "version": "1.0.0",
+  "description": "Advent of code 2021 challanges and solutions",
+  "repository": "git@github.com:csoLs/advent-of-code-2021.git",
+  "author": "csoLs <linus.stengard@dooer.com>",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "jest --outputFile .artifacts/test-results.json --json",
+    "lint": "eslint . --ext .ts",
+    "type-check": "tsc --noEmit",
+    "init-day": "./init-day.sh"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "eslint": "^8.3.0",
+    "jest": "^27.4.3",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.5.2"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.json"
+      }
+    },
+    "testMatch": [
+      "**/*.+(spec|test).(ts|tsx|js)"
+    ]
+  }
+}

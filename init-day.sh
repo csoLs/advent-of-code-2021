@@ -5,34 +5,59 @@ read d
 echo What\'s todays title?
 read title
 
-mkdir d$d--$title
-cd d$d--$title
+mkdir -p src/d$d--$title
+cd src/d$d--$title
 
-touch a.ts a.test.ts b.ts b.test.ts input.ts README.md
+touch a.ts a.spec.ts b.ts b.spec.ts input.ts README.md
 
 echo "import fsInput from './input'
 
-const fn = () =>
+const fn = (input: any) => {
+  return null
+}
 fn(fsInput)
 
-export.default = fn" | tee a.ts > b.ts
+export default fn" | tee a.ts > b.ts
 
-echo "import fn from './a'
+echo "/* eslint-env jest */
 
-const testcases = [{
-    input: '',
-    expected: ''
-  }
-]
+import fn from './a'
 
-testcases.map(tc => {
-    const res = fn(tc.input)
-    console.log(res === tc.expected ? 'PASSED' : \`FAILED WITH INPUT \${tc.input}, GOT \${res} EXPECTED \${tc.expected}\`)
-})" | tee a.test.ts > b.test.ts
+const testCases = [{
+  name: 'basic',
+  input: [],
+  expected: null
+}]
 
-echo "const input = ``
+describe('d$d--$title a', () => {
+  testCases.forEach(tc => {
+    it(\`should handle \${tc.name} test\`, () => {
+      expect(fn(tc.input)).toEqual(tc.expected)
+    })
+  })
+})" | tee a.spec.ts
 
-export.default = input.split('\n')" > input.ts
+echo "/* eslint-env jest */
+
+import fn from './a'
+
+const testCases = [{
+  name: 'basic',
+  input: [],
+  expected: null
+}]
+
+describe('d$d--$title b', () => {
+  testCases.forEach(tc => {
+    it(\`should handle \${tc.name} test\`, () => {
+      expect(fn(tc.input)).toEqual(tc.expected)
+    })
+  })
+})" | tee b.spec.ts
+
+echo "const input = \`\`
+
+export default input.split('\n')" > input.ts
 
 echo "## References
 - https://adventofcode.com/2021/day/$d" > README.md
