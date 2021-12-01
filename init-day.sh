@@ -1,12 +1,29 @@
 #!/bin/bash
+. .env
 
 echo What date should we init?
 read d
 echo What\'s todays title?
 read title
 
-mkdir -p src/d$d--$title
-cd src/d$d--$title
+printf -v fullDigit "%02d" $d
+
+mkdir -p src/d$fullDigit--$title
+cd src/d$fullDigit--$title
+
+input=$(curl 'https://adventofcode.com/2021/day/'$d'/input' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:94.0) Gecko/20100101 Firefox/94.0' \
+-H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8' \
+-H 'Accept-Language: sv,en-US;q=0.7,en;q=0.3' --compressed \
+-H 'Referer: https://adventofcode.com/2021/day/'$d'' \
+-H 'Connection: keep-alive' \
+-H 'Cookie: session='$SECRET_COOKIE'' \
+-H 'Upgrade-Insecure-Requests: 1' \
+-H 'Sec-Fetch-Dest: document' \
+-H 'Sec-Fetch-Mode: navigate' \
+-H 'Sec-Fetch-Site: same-origin' \
+-H 'Sec-Fetch-User: ?1' \
+-H 'Cache-Control: max-age=0')
 
 touch a.ts a.spec.ts b.ts b.spec.ts input.ts README.md
 
@@ -29,7 +46,7 @@ const testCases = [{
   expected: null
 }]
 
-describe('d$d--$title a', () => {
+describe('d$fullDigit--$title a', () => {
   testCases.forEach(tc => {
     it(\`should handle \${tc.name} test\`, () => {
       expect(fn(tc.input)).toEqual(tc.expected)
@@ -47,7 +64,7 @@ const testCases = [{
   expected: null
 }]
 
-describe('d$d--$title b', () => {
+describe('d$fullDigit--$title b', () => {
   testCases.forEach(tc => {
     it(\`should handle \${tc.name} test\`, () => {
       expect(fn(tc.input)).toEqual(tc.expected)
@@ -55,7 +72,7 @@ describe('d$d--$title b', () => {
   })
 })" | tee b.spec.ts
 
-echo "const input = \`\`
+echo "const input = \`${input}\`
 
 export default input.split('\n')" > input.ts
 
