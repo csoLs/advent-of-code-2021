@@ -39,7 +39,7 @@ describe('d$d--$title a', () => {
 
 echo "/* eslint-env jest */
 
-import fn from './a'
+import fn from './b'
 
 const testCases = [{
   name: 'basic',

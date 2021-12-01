@@ -1999,4 +1999,4 @@ const input = `183
 9860
 9875`
 
-module.exports = input.split('\n').map(v => parseInt(v,10))
+export default input.split('\n').map(v => parseInt(v,10))
