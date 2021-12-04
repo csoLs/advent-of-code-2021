@@ -1,21 +1,38 @@
 #!/bin/bash
 . .env
 
+currentYear=`date +'%Y'`
+year=$currentYear
+echo "What year should we init? ($year)"
+read yearInput
+[ -n "$yearInput" ] && year=$yearInput
+
 echo What date should we init?
 read d
+if [[ $d -eq 0 ]] ; then
+    echo 'Missing date parameter'
+    exit 1
+fi
+
 echo What\'s todays title?
 read title
 
 printf -v fullDigit "%02d" $d
 
-mkdir -p src/d$fullDigit--$title
-cd src/d$fullDigit--$title
+if [[ $year -eq $currentYear ]] ;
+  then
+    mkdir -p src/d$fullDigit--$title
+    cd src/d$fullDigit--$title
+  else
+    mkdir -p src/${year}/d$fullDigit--$title
+    cd src/${year}/d$fullDigit--$title
+fi
 
-input=$(curl 'https://adventofcode.com/2021/day/'$d'/input' \
+input=$(curl 'https://adventofcode.com/'$year'/day/'$d'/input' \
 -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:94.0) Gecko/20100101 Firefox/94.0' \
 -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8' \
 -H 'Accept-Language: sv,en-US;q=0.7,en;q=0.3' --compressed \
--H 'Referer: https://adventofcode.com/2021/day/'$d'' \
+-H 'Referer: https://adventofcode.com/'$year'/day/'$d'' \
 -H 'Connection: keep-alive' \
 -H 'Cookie: session='$SECRET_COOKIE'' \
 -H 'Upgrade-Insecure-Requests: 1' \
@@ -42,7 +59,7 @@ import fn from './a'
 
 const testCases = [{
   name: 'basic',
-  input: [],
+  input: ``.split('\n'),
   expected: null
 }]
 
@@ -60,7 +77,7 @@ import fn from './b'
 
 const testCases = [{
   name: 'basic',
-  input: [],
+  input: ``.split('\n'),
   expected: null
 }]
 
@@ -77,4 +94,4 @@ echo "const input = \`${input}\`
 export default input.split('\n')" > input.ts
 
 echo "## References
-- https://adventofcode.com/2021/day/$d" > README.md
+- https://adventofcode.com/$year/day/$d" > README.md
