@@ -22,7 +22,7 @@ interface IEvent {
 }
 
 const printData = (data: IEvent) => {
-  console.log(data.event)
+  console.log(`Leaderboard for AoC ${data.event}`)
 
   Object.values(data.members)
     .sort((a,b) => b.local_score - a.local_score)
@@ -42,4 +42,4 @@ const printData = (data: IEvent) => {
 }
 printData(data2021)
 
-export default data2021
+export default printData

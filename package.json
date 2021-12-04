@@ -10,7 +10,8 @@
     "lint": "eslint . --ext .ts",
     "type-check": "tsc --noEmit",
     "init-day": "./scripts/init-day.sh",
-    "update": "./scripts/update-leaderboard.sh"
+    "update": "./scripts/update-leaderboard.sh",
+    "build-leaderboard": "tsc leaderboard/index.ts --resolveJsonModule --esModuleInterop"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
