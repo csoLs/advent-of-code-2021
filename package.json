@@ -9,7 +9,8 @@
     "test": "jest --outputFile .artifacts/test-results.json --json",
     "lint": "eslint . --ext .ts",
     "type-check": "tsc --noEmit",
-    "init-day": "./init-day.sh"
+    "init-day": "./scripts/init-day.sh",
+    "update": "./scripts/update-leaderboard.sh"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
