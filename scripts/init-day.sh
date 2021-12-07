@@ -69,7 +69,7 @@ describe('d$fullDigit--$title a', () => {
       expect(fn(tc.input)).toEqual(tc.expected)
     })
   })
-})" > tee a.spec.ts
+})" > a.spec.ts
 
 echo "/* eslint-env jest */
 
@@ -87,7 +87,7 @@ describe('d$fullDigit--$title b', () => {
       expect(fn(tc.input)).toEqual(tc.expected)
     })
   })
-})" > tee b.spec.ts
+})" > b.spec.ts
 
 echo "const input = \`${input}\`
 
