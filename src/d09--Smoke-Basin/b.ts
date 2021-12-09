@@ -56,8 +56,6 @@ const fn = (input: string[]) => {
 
   const basins = lowPoint.map(coord => calcBasin(coord,parsed))
 
-  console.log(basins)
-
   return basins.sort((a,b) => b-a).splice(0,3).reduce((acc,v) => acc*v,1)
 }
 console.log(fn(fsInput))

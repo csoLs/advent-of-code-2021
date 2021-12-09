@@ -4,27 +4,15 @@ const fn = (input: string[]) => {
   const parsed = input.map(s => s.split('').map(Number))
   const risk = []
 
-  for (let i = 0; i < parsed.length; i++) {
-    for (let j = 0; j < parsed[i].length; j++) {
+  for (let y = 0; y < parsed.length; y++) {
+    for (let x = 0; x < parsed[y].length; x++) {
       if(
-        (
-          i===0 ||
-          (parsed[i-1][j] > parsed[i][j])
-        ) &&
-        (
-          i===parsed.length-1 ||
-          (parsed[i+1][j] > parsed[i][j])
-        ) &&
-        (
-          j===0 ||
-          (parsed[i][j-1] > parsed[i][j])
-        ) &&
-        (
-          j===parsed[i].length-1 ||
-          (parsed[i][j+1] > parsed[i][j])
-        )
+        (y===0 || (parsed[y-1][x] > parsed[y][x])) &&
+        (y===parsed.length-1 || (parsed[y+1][x] > parsed[y][x])) &&
+        (x===0 || (parsed[y][x-1] > parsed[y][x])) &&
+        (x===parsed[y].length-1 || (parsed[y][x+1] > parsed[y][x]))
       ) {
-        risk.push(parsed[i][j]+1)
+        risk.push(parsed[y][x]+1)
       }
     }    
   }
