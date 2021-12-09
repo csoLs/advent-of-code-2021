@@ -1,12 +1,7 @@
 import fsInput from './input'
 
-const calcIndCost = (times:number,cost:number):number => {
-  return times===0
-  ? cost
-  : cost + calcIndCost(times-1,cost+1)
-}
 const calcCost = (pos:number,input:number[]) => {
-  return input.reduce((acc,v) => acc + calcIndCost(Math.abs(v-pos),0), 0)
+  return input.reduce((acc,v) => acc + (Math.abs(v-pos)*(Math.abs(v-pos)+1)/2),0)
 }
 
 const fn = (input: string[]) => {
