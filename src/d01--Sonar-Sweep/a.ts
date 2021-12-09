@@ -1,16 +1,7 @@
 import fsInput from './input'
 
 const fn = (input: number[]) => {
-  let increase = 0
-  
-  input.map((val, i, arr) => {
-    if(i === 0)
-      return
-    else if(val > arr[i-1])
-      increase++
-  })
-  
-  return increase
+  return input.reduce((acc, val, i, arr) => acc + (i === 0 || val <= arr[i-1] ? 0 : 1), 0)
 }
 console.log(fn(fsInput))
 
