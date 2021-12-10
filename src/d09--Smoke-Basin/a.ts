@@ -14,7 +14,7 @@ const fn = (input: string[]) => {
       ) {
         risk.push(parsed[y][x]+1)
       }
-    }    
+    }
   }
   return risk.reduce((acc,v) => acc+v, 0)
 }
