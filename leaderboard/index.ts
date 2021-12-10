@@ -42,7 +42,7 @@ const renderUser = (name:string, score: number, stars:{pt1:boolean, pt2: boolean
   const padScore = score>=1000?0:score>=100?1:score>=10?2:3
 console.log(chalk.bold(`${' '.repeat(padPlace)}${place}) ${' '.repeat(padScore)}${score} `) + chalk.yellow(`${stars.map(s => s.pt2 ? '★' :s.pt1 ? '☆' : ' ').join(' ')} `) + name)
 if(PRINT_TIME_TO_BOTH)
-  console.log(stars.map(({time}, i) => time ? `Time to both on day ${i+1}: ${time}`:undefined).filter(Boolean).join('\n'))
+  console.log(stars.map(({time}, i) => time ? chalk.dim(`Time to both on day ${' '.repeat(i<9?1:0)}${i+1}: `) + time:undefined).filter(Boolean).join('\n'))
 }
 
 const printData = (data: IEvent) => {
