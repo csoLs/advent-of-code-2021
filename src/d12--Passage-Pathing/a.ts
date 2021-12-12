@@ -1,9 +1,5 @@
 import fsInput from './input'
 
-interface ICave {
-  [key: string]: { name: string, startPoint: boolean, endPoint: boolean, bigCave: boolean }
-}
-
 const parseRow = (str:string) => {
   const [start,end] = str.split('-')
 
@@ -41,7 +37,6 @@ const fn = (input: string[]) => {
     }
     return res
   })
-  // console.dir(map, { depth: null })
 
   const routes: string[] = []
 
@@ -58,8 +53,6 @@ const fn = (input: string[]) => {
   }
 
   calcRoute(['start'])
-
-  // console.log(routes)
   
   return routes.length
 }
