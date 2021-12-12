@@ -48,10 +48,7 @@ const fn = (input: string[]) => {
         }
       }
       if(element.endPoint) {
-        const route = [...steps, element.name].join(',')
-        if(!routes.find(r => r === route)) {
-          routes.push(route)
-        }
+        routes.push([...steps, element.name].join(','))
         return
       }
 
@@ -65,7 +62,7 @@ const fn = (input: string[]) => {
     calcRoute(['start'], cave)    
   })
 
-  return routes.length
+  return Array.from(new Set(routes)).length
 }
 console.log(fn(fsInput))
 
