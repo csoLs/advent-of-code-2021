@@ -8,7 +8,7 @@ const parseInput = (i:string[]) => {
   const instructions = i.filter(i => i.startsWith('fold')).map(s => {
     const [inst,fold] = s.split('=')
     if(inst === 'fold along y') return { y: parseInt(fold,10)}
-    if(inst === 'fold along x') return { x: parseInt(fold,10)}
+    return { x: parseInt(fold,10)}
   })
   const size = map.reduce((acc, v) => {
     return {
@@ -18,12 +18,6 @@ const parseInput = (i:string[]) => {
   }, { x:0,y:0 })
 
   return {map, instructions, size}
-}
-
-const drawMap = (map:{x:number,y:number}[], size: {x:number,y:number}, fold?:{x?:number,y?:number}) => {
-  const draw = Array.from({ length: size.y }, (_,y) => Array.from({ length: size.x }, (_,x) => map.find(c => c.y === y && c.x === x ) ? '#' : fold && fold.x === x ? '|' : fold && fold.y === y ? '-':'.'))
-  console.log(draw.map(d => d.join('')).join('\n'))
-  return draw
 }
 
 const fold = (map:{x:number,y:number}[], size: {x:number,y:number}, fold: {x?:number,y?:number}) => {
@@ -61,21 +55,8 @@ const fold = (map:{x:number,y:number}[], size: {x:number,y:number}, fold: {x?:nu
 
 const fn = (input: string[]) => {
   const { map, size, instructions } = parseInput(input)
-
-  let _size = size
-  let _map = map
-  instructions.filter((_,i) => i===0).map(f => {
-    if(!f) return null
-
-    const res = fold(_map,_size,f)
-    _size = res.size
-    _map = res.map
-  })
-
-  drawMap(_map, _size)
-
+  const { map: _map } = fold(map,size,instructions[0])
   const countUnique = Array.from(new Set([..._map].map(s => `${s.x},${s.y}`))).length
-
   return countUnique 
 }
 console.log(fn(fsInput))

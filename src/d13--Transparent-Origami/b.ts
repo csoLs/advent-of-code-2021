@@ -8,7 +8,7 @@ const parseInput = (i:string[]) => {
   const instructions = i.filter(i => i.startsWith('fold')).map(s => {
     const [inst,fold] = s.split('=')
     if(inst === 'fold along y') return { y: parseInt(fold,10)}
-    if(inst === 'fold along x') return { x: parseInt(fold,10)}
+    return { x: parseInt(fold,10)}
   })
   const size = map.reduce((acc, v) => {
     return {
@@ -21,7 +21,7 @@ const parseInput = (i:string[]) => {
 }
 
 const drawMap = (map:{x:number,y:number}[], size: {x:number,y:number}, fold?:{x?:number,y?:number}) => {
-  const draw = Array.from({ length: size.y }, (_,y) => Array.from({ length: size.x }, (_,x) => map.find(c => c.y === y && c.x === x ) ? '#' : fold && fold.x === x ? '|' : fold && fold.y === y ? '-':'.'))
+  const draw = Array.from({ length: size.y + 2 }, (_,y) => Array.from({ length: size.x + 2 }, (_,x) => x===0||y===0||x===size.x+1||y===size.y+1 ? '⬜️' : map.find(c => c.y === y-1 && c.x === x-1 ) ? '🟧' : fold && fold.x === x-1 ? '🔚' : fold && fold.y === y-1 ? '🔝':'⬜️'))
   console.log(draw.map(d => d.join('')).join('\n'))
   return draw
 }
@@ -50,11 +50,9 @@ const fold = (map:{x:number,y:number}[], size: {x:number,y:number}, fold: {x?:nu
         y: y - (coords.y-y)
       }
     })
-
     return { map: newMap, size: {x: size.x, y }}
   } else {
     console.error('sum thing wrong')
-
     return { map, size }
   }
 }
@@ -65,17 +63,13 @@ const fn = (input: string[]) => {
   let _size = size
   let _map = map
   instructions.map(f => {
-    if(!f) return null
-
     const res = fold(_map,_size,f)
     _size = res.size
     _map = res.map
   })
 
   drawMap(_map, _size)
-
   const countUnique = Array.from(new Set([..._map].map(s => `${s.x},${s.y}`))).length
-
   return countUnique 
 }
 console.log(fn(fsInput))
