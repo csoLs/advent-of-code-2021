@@ -4,7 +4,7 @@ import fn from './b'
 
 const testCases = [{
   name: 'basic',
-  input: .split('\n'),
+  input: ''.split('\n'),
   expected: null
 }]
 
