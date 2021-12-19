@@ -87,7 +87,6 @@ const findNextIndex = (arr: any[], index: number[]) => {
   return []
 }
 
-
 const reduceNumber = (nr: any[], asString = true) => {
   const newNr = [...nr]
   let reducing = true
@@ -95,7 +94,7 @@ const reduceNumber = (nr: any[], asString = true) => {
   let reduceCount = 0
 
   while (reducing) {
-    if(findExplode(nr, 1)) {
+    if(findExplode(newNr, 1)) {
       //find pair nested 4 levels deep; explode
 
       //the matches left value is added to the previous value if any
@@ -145,7 +144,7 @@ const reduceNumber = (nr: any[], asString = true) => {
           }
         }
       }
-    } else if(findSplit(nr)) {
+    } else if(findSplit(newNr)) {
       //find number 10 or greater; split
 
       //replace match with a pair
@@ -194,10 +193,24 @@ const reduceNumber = (nr: any[], asString = true) => {
 
 const addNumbers = (nr1:any[],nr2:any[]) => [nr1,nr2]
 
-const fn = (input: string[]) => {
-  return JSON.stringify(input.map(s => JSON.parse(s)).reduce((acc,v) => reduceNumber(addNumbers(acc,v), false)))
+const addAndReduce = (input: string[], asString = true) => {
+  const res = input.map(s => JSON.parse(s)).reduce((acc,v) => reduceNumber(addNumbers(acc,v), false))
+  return asString ? JSON.stringify(res) : res
 }
-// fn(fsInput)
+
+const calculateMagnitude = (input: number[] | number):number => {
+  if(typeof input === 'number') return input
+  else {
+    return input.reduce((acc, v, i) => acc + (i===0 ? 3 : 2) * calculateMagnitude(v), 0)
+  }
+}
+
+const fn = (input: string[]) => {
+  const res = addAndReduce(input, false)
+
+  return calculateMagnitude(res)
+}
+console.log('res:', fn(fsInput))
 
 export default fn
-export { reduceNumber, addNumbers }
+export { reduceNumber, addNumbers, addAndReduce, calculateMagnitude }
