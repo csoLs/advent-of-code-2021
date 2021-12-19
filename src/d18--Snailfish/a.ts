@@ -32,11 +32,15 @@ const findPrevIndex = (arr: any[], index: number[]) => {
             if(typeof arr[i1][i2][i3] === 'number') {
               return [i1,i2,i3]
             } else {
-              console.dir(arr, { depth: null })
-              console.log(i1,i2,i3)
               for (let i4 = i1 === index[0] && i2 === index[1] && i3 === index[2] ? index[3] : arr[i1][i2][i3].length-1 ; i4 >= 0; i4--) {
                 if(typeof arr[i1][i2][i3][i4] === 'number'){
                   return [i1,i2,i3,i4]
+                } else {
+                  for (let i5 = i1 === index[0] && i2 === index[1] && i3 === index[2] && i4 === index[3] ? index[4] : arr[i1][i2][i3][i4].length-1; i5 >= 0; i5--) {
+                    if(typeof arr[i1][i2][i3][i4][i5] === 'number' && !(i1===index[0] && i2===index[1] && i3===index[2] && i4===index[3] && i5===index[4])){
+                      return [i1,i2,i3,i4,i5]
+                    }
+                  }
                 }
               }
             }
@@ -68,7 +72,6 @@ const findNextIndex = (arr: any[], index: number[]) => {
                 } else {
                   for (let i5 = i1 === index[0] && i2 === index[1] && i3 === index[2] && i4 === index[3] ? index[4] : 0; i5 < arr[i1][i2][i3][i4].length; i5++) {
                     if(typeof arr[i1][i2][i3][i4][i5] === 'number' && !(i1===index[0] && i2===index[1] && i3===index[2] && i4===index[3] && i5===index[4])){
-                      console.warn(arr[i1][i2][i3][i4][i5])
                       return [i1,i2,i3,i4,i5]
                     }
                   }
@@ -92,8 +95,6 @@ const reduceNumber = (nr: any[], asString = true) => {
   let reduceCount = 0
 
   while (reducing) {
-    console.log('looping')
-    console.dir(newNr, { depth: null })
     if(findExplode(nr, 1)) {
       //find pair nested 4 levels deep; explode
 
@@ -101,90 +102,44 @@ const reduceNumber = (nr: any[], asString = true) => {
       //the matches right value is added to the next value if any
       //the pair is replaced by 0
 
-      console.log('explode')
-      
-      for (let i1 = 0; i1 < newNr.length; i1++) {
-        for (let i2 = 0; i2 < newNr[i1].length; i2++) {
-          for (let i3 = 0; i3 < newNr[i1][i2].length; i3++) {
-            for (let i4 = 0; i4 < newNr[i1][i2][i3].length; i4++) {
+      loop_block: {
+        for (let i1 = 0; i1 < newNr.length; i1++) {
+          for (let i2 = 0; i2 < newNr[i1].length; i2++) {
+            for (let i3 = 0; i3 < newNr[i1][i2].length; i3++) {
+              for (let i4 = 0; i4 < newNr[i1][i2][i3].length; i4++) {
+                if(Array.isArray(newNr[i1][i2][i3][i4])) {
+                  const [v1,v2] = newNr[i1][i2][i3][i4]
 
-              if(Array.isArray(newNr[i1][i2][i3][i4])) {
-                console.log(newNr[i1][i2][i3][i4], ` at index ${i1},${i2},${i3},${i4}`)
-                const [v1,v2] = newNr[i1][i2][i3][i4]
+                  const prevIndex = findPrevIndex(newNr, [i1,i2,i3,i4,0])
+                  const nextIndex = findNextIndex(newNr, [i1,i2,i3,i4,1])
 
-                const prevIndex = findPrevIndex(newNr, [i1,i2,i3,i4])
-                const nextIndex = findNextIndex(newNr, [i1,i2,i3,i4,1])
-                console.log('*********************\n\n New indexes: ', prevIndex, nextIndex)
+                  if(prevIndex.length === 1) {
+                    newNr[prevIndex[0]] += v1
+                  } else if(prevIndex.length === 2) {
+                    newNr[prevIndex[0]][prevIndex[1]] += v1
+                  } else if(prevIndex.length === 3) {
+                    newNr[prevIndex[0]][prevIndex[1]][prevIndex[2]] += v1
+                  } else if(prevIndex.length === 4) {
+                    newNr[prevIndex[0]][prevIndex[1]][prevIndex[2]][prevIndex[3]] += v1
+                  } else if(prevIndex.length === 5) {
+                    newNr[prevIndex[0]][prevIndex[1]][prevIndex[2]][prevIndex[3]][prevIndex[4]] += v1
+                  }
 
-                if(prevIndex.length === 1) {
-                  newNr[prevIndex[0]] += v1
-                } else if(prevIndex.length === 2) {
-                  newNr[prevIndex[0]][prevIndex[1]] += v1
-                } else if(prevIndex.length === 3) {
-                  newNr[prevIndex[0]][prevIndex[1]][prevIndex[2]] += v1
-                } else if(prevIndex.length === 4) {
-                  newNr[prevIndex[0]][prevIndex[1]][prevIndex[2]][prevIndex[3]] += v1
+                  if(nextIndex.length === 1) {
+                    newNr[nextIndex[0]] += v2
+                  } else if(nextIndex.length === 2) {
+                    newNr[nextIndex[0]][nextIndex[1]] += v2
+                  } else if(nextIndex.length === 3) {
+                    newNr[nextIndex[0]][nextIndex[1]][nextIndex[2]] += v2
+                  } else if(nextIndex.length === 4) {
+                    newNr[nextIndex[0]][nextIndex[1]][nextIndex[2]][nextIndex[3]] += v2
+                  } else if(nextIndex.length === 5) {
+                    newNr[nextIndex[0]][nextIndex[1]][nextIndex[2]][nextIndex[3]][nextIndex[4]] += v2
+                  }
+
+                  newNr[i1][i2][i3][i4] = 0
+                  break loop_block
                 }
-
-                if(nextIndex.length === 1) {
-                  newNr[nextIndex[0]] += v2
-                } else if(nextIndex.length === 2) {
-                  newNr[nextIndex[0]][nextIndex[1]] += v2
-                } else if(nextIndex.length === 3) {
-                  newNr[nextIndex[0]][nextIndex[1]][nextIndex[2]] += v2
-                } else if(nextIndex.length === 4) {
-                  newNr[nextIndex[0]][nextIndex[1]][nextIndex[2]][nextIndex[3]] += v2
-                } else if(nextIndex.length === 5) {
-                  newNr[nextIndex[0]][nextIndex[1]][nextIndex[2]][nextIndex[3]][nextIndex[4]] += v2
-                }
-
-                // if(i4 > 0) {
-                //   // console.log(i4, newNr[i1][i2][i3])
-                //   // console.log(`adding ${v1} to i4 ${newNr[i1][i2][i3][i4-1]}`)
-                //   newNr[i1][i2][i3][i4-1] += v1
-                // } else if(i3 > 0) {
-                //   // console.log(i3, newNr[i1][i2])
-                //   // console.log(`adding ${v1} to i3 ${newNr[i1][i2][i3-1]}`)
-                //   newNr[i1][i2][i3-1][newNr[i1][i2][i3-1].length-1] += v1
-                // } else if (i2 > 0) {
-                //   // console.log(i2, newNr[i1][i2])
-                //   // console.log(`adding ${v1} to i2 ${newNr[i1][i2-1]}`)
-                //   newNr[i1][i2-1][newNr[i1][i2-1].length-1] += v1
-                // } else if (i1 > 0) {
-                //   // console.log(i1, newNr[i1])
-                //   // console.log(`adding ${v1} to i1 ${newNr[i1-1]}`)
-                //   newNr[i1-1][newNr[i1-1].length-1] += v1
-                // }
-                
-                // if(i4 < newNr[i1][i2][i3].length-1) {
-                //   // console.log(i4, newNr[i1][i2][i3])
-                //   // console.log(`adding ${v2} to i4 ${newNr[i1][i2][i3][i4+1]}`)
-                //   if(typeof newNr[i1][i2][i3][i4+1] === 'number') newNr[i1][i2][i3][i4+1] += v2
-                //   else newNr[i1][i2][i3][i4+1][0] += v2
-                // } else if(i3 < newNr[i1][i2].length-1) {
-                //   // console.log(`adding ${v2} to i3 ${newNr[i1][i2][i3+1]}`)
-                //   if(typeof newNr[i1][i2][i3+1] === 'number') newNr[i1][i2][i3+1] += v2
-                //   else newNr[i1][i2][i3+1][0] += v2
-                // } else if(i2 < newNr[i1].length-1) {
-                //   // console.log(`adding ${v2} to i2 ${newNr[i1][i2+1]}`)
-                //   if(typeof newNr[i1][i2+1] === 'number') newNr[i1][i2+1] += v2
-                //   else newNr[i1][i2+1][0] += v2
-                // } else if(i1 < newNr[i1].length-1) {
-                //   // console.log(`adding ${v2} to i1 ${newNr[i1+1]}`)
-                //   if(typeof newNr[i1+1] === 'number') newNr[i1+1] += v2
-                //   else newNr[i1+1][0] += v2
-                // }
-
-                newNr[i1][i2][i3][i4] = 0
-
-                // i4 = newNr[i1][i2][i3].length +1
-                // i3 = newNr[i1][i2].length
-                // i2 = newNr[i1].length
-                // i1 = newNr.length
-
-                console.log('end explode')
-                console.dir(newNr, { depth: null })
-                break
               }
             }
           }
@@ -197,25 +152,27 @@ const reduceNumber = (nr: any[], asString = true) => {
       //left value = math.floor(match/2]
       //right value = math.ceil(match/2]
 
-      for (let i1 = 0; i1 < newNr.length; i1++) {
-        if(typeof newNr[i1] === 'number' && newNr[i1] >= 10) {
-          newNr[i1] = [Math.floor(newNr[i1]/2),Math.ceil(newNr[i1]/2)]
-          break
-        } else {
-          for (let i2 = 0; i2 < newNr[i1].length; i2++) {
-            if(typeof newNr[i1][i2] === 'number' && newNr[i1][i2] >= 10) {
-              newNr[i1][i2] = [Math.floor(newNr[i1][i2]/2),Math.ceil(newNr[i1][i2]/2)]
-              break
-            } else {
-              for (let i3 = 0; i3 < newNr[i1][i2].length; i3++) {
-                if(typeof newNr[i1][i2][i3] === 'number' && newNr[i1][i2][i3] >= 10) {
-                  newNr[i1][i2][i3] = [Math.floor(newNr[i1][i2][i3]/2),Math.ceil(newNr[i1][i2][i3]/2)]
-                  break
-                } else {
-                  for (let i4 = 0; i4 < newNr[i1][i2][i3].length; i4++) {
-                    if(typeof newNr[i1][i2][i3][i4] === 'number' && newNr[i1][i2][i3][i4] >= 10) {
-                      newNr[i1][i2][i3][i4] = [Math.floor(newNr[i1][i2][i3][i4]/2),Math.ceil(newNr[i1][i2][i3][i4]/2)]
-                      break
+      loop_block: {
+        for (let i1 = 0; i1 < newNr.length; i1++) {
+          if(typeof newNr[i1] === 'number' && newNr[i1] >= 10) {
+            newNr[i1] = [Math.floor(newNr[i1]/2),Math.ceil(newNr[i1]/2)]
+            break loop_block
+          } else {
+            for (let i2 = 0; i2 < newNr[i1].length; i2++) {
+              if(typeof newNr[i1][i2] === 'number' && newNr[i1][i2] >= 10) {
+                newNr[i1][i2] = [Math.floor(newNr[i1][i2]/2),Math.ceil(newNr[i1][i2]/2)]
+                break loop_block
+              } else {
+                for (let i3 = 0; i3 < newNr[i1][i2].length; i3++) {
+                  if(typeof newNr[i1][i2][i3] === 'number' && newNr[i1][i2][i3] >= 10) {
+                    newNr[i1][i2][i3] = [Math.floor(newNr[i1][i2][i3]/2),Math.ceil(newNr[i1][i2][i3]/2)]
+                    break loop_block
+                  } else {
+                    for (let i4 = 0; i4 < newNr[i1][i2][i3].length; i4++) {
+                      if(typeof newNr[i1][i2][i3][i4] === 'number' && newNr[i1][i2][i3][i4] >= 10) {
+                        newNr[i1][i2][i3][i4] = [Math.floor(newNr[i1][i2][i3][i4]/2),Math.ceil(newNr[i1][i2][i3][i4]/2)]
+                        break loop_block
+                      }
                     }
                   }
                 }
@@ -224,9 +181,6 @@ const reduceNumber = (nr: any[], asString = true) => {
           }
         }
       }
-
-      console.log('split')
-      reducing = false
     } else {
       reducing = false
     }
