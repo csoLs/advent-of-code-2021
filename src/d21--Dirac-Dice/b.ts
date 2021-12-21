@@ -31,6 +31,7 @@ const SCORE_TO_WIN = 21
 
 const fn = (input: string[]) => {
   const playerPositions = input.map(s => parseInt(s.charAt(s.length-1),10)-1)
+  // Create memo array with all possible states (21*21 scores * 10*10 positions = 44100)
   const memo: [number, number][] = Array(44100)
   
   function diracGame(
