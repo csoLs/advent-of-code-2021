@@ -256,7 +256,7 @@ add y w
 add y 6
 mul y x
 add z y`.split('\n'),
-  expected: null
+  expected: [17153114691118, 29599469991739]
 }]
 
 describe('d24--Arithmetic-Logic-Unit a', () => {

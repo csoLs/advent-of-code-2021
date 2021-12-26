@@ -1,6 +1,6 @@
 import fsInput from './input'
 
-const rules = [
+const _RULES = [
   { rule: 1,  pair: 14, constX: 14,   constY: 7,  divideBy: 1   },
   { rule: 2,  pair: 13, constX: 12,   constY: 4,  divideBy: 1   },
   { rule: 3,  pair: 4,  constX: 11,   constY: 8,  divideBy: 1   },
@@ -17,38 +17,32 @@ const rules = [
   { rule: 14, pair: 1,  constX: 0,    constY: 6,  divideBy: 26  },
 ]
 
-// if (w[3]  == w[2]-7) && 
-//    (w[7]  == w[6]-4) && 
-//    (w[9]  == w[8]-2) && 
-//    (w[10] == w[5]-8) &&
-//    (w[11] == w[4]+3) &&
-//    (w[12] == w[1]+7) &&
-//    (w[13] == w[0]+4)
-
-const fn = (input: string[], part = 2) => {
+const fn = (input: string[]) => {
   const terms: number[][] = []
   for (let i = 0; i < input.length; i += 18) {
     terms.push([4, 5, 15].map((j) => +input[i + j].split(' ')[2]))
   }
 
   const prevs: number[][] = []
-  const digits = []
+  const smallestDigit: number[] = []
+  const largestDigit: number[] = []
 
-  for (const [i, [divideBy, constX, constY]] of Object.entries(terms)) {
+  terms.forEach(([divideBy, constX, constY], i) => {
     if (divideBy === 1) {
-      prevs.push([parseInt(i,10), constY])
+      prevs.push([i, constY])
     } else {
-      const [prevI, prevC] = prevs.pop() ?? [0,0]
-      const complement = prevC + constX
-      digits[prevI] = part === 1 ? Math.min(9, 9 - complement) : Math.max(1, 1 - complement)
-      digits[parseInt(i,10)] = digits[prevI] + complement
+      const [pairIndex, pairConstY] = prevs.pop() ?? [0,0]
+      const complement = pairConstY + constX
+
+      largestDigit[pairIndex] = Math.min(9, 9 - complement)
+      largestDigit[i] = largestDigit[pairIndex] + complement
+      smallestDigit[pairIndex] = Math.max(1, 1 - complement)
+      smallestDigit[i] = smallestDigit[pairIndex] + complement
     }
-  }
-  console.log(digits.join(''))
+  })
 
-  return terms
+  return [parseInt(smallestDigit.join(''),10), parseInt(largestDigit.join(''),10)]
 }
-
-// console.log(fn(fsInput))
+console.log(fn(fsInput))
 
 export default fn
